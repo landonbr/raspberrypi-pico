@@ -1,6 +1,8 @@
 #ifndef _CRC32_H
 #define _CRC32_H
 
+#include <stdint.h>
+
 // crc32 look up table for pico bootrom
 static uint32_t crc32[256] = {
     0x00000000, 0x04c11db7, 0x09823b6e, 0x0d4326d9,

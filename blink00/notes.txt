@@ -1,0 +1,2 @@
+- the second stage is copied from flash to SRAM by the bootrom and exectuted in SRAM
+- flash second stage is entered when a checksum is passed via a crc32

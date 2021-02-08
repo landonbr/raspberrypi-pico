@@ -1,21 +1,45 @@
-// TODO: read 2.8.4.2. UF2 format for file implementation
-// more crc code implementation
-// also what is going into write data[]
-
 #include <stdio.h>
 #include "crc32.h"
 
-//  this file will work as follows after it is compiled
-//  ./makeuf2 <input file> <output file>
-//              {bin}           {uf2}
+//  usage-- ./makeuf2 <input file> <output file>
+//                        {elf}        {uf2}
+
+const char write_data[128];
+const char data[512];
 
 
-// NOTE: check docs buffer for reading the input file
-
-
-int bin_uf2(FILE *in, FILE *out) {
+#if 0
+int elf_uf2(FILE *in, FILE *out) {
 
 }
+#endif
+
+// setting up data to be read into uf2
+int elfIn(FILE *fin, char *in_file) {
+
+    unsigned int length;
+
+    fin = fopen(in_file, "rb"); 
+    if(fin == NULL) {
+        fprintf(stderr, "Error opening input file %s\n", in_file);
+    }
+
+    // initialize data memory
+    memset(data, 0, sizeof(data));
+    length = fread(data, 1, sizeof(data), fin);
+    fclose(fin);
+
+    // last four bytes reserved for checksum
+    if(length > 252) {
+        fprintf(stderr, "Memory is outside of range: %08x -> %08x\n", data, sizeof(data));
+    }
+
+    return data;
+}
+
+// TODO: checksum function
+
+//TODO: uf2Out function
 
 int main(int argc, char **argv) {
 
@@ -23,17 +47,8 @@ int main(int argc, char **argv) {
     const char *out_file = argv[2];
 
     if(argc < 3) {
-        fprintf(stderr, "*ERROR* Usage: ./exe <input bin file> <output uf2 file>\n");
+        fprintf(stderr, "*ERROR* Usage: ./exe <input elf file> <output uf2 file>\n");
     }
-
-    FILE *fin;
-    in = fopen(in_file, "rb"); 
-    if(fin == NULL) {
-        fprintf(stderr, "Error opening input file %s\n", in_file);
-    }
-    // TODO: read input data - make sure it is not bigger than 252 bytes bc 4 bytes is needed by the checksum at the end
-
-
 
     return 0;
 }
